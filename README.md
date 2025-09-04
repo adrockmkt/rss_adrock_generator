@@ -94,8 +94,42 @@ Validate the generated feed using:
 
 👉 https://validator.w3.org/feed/
 
+
 ## 💡 Future (optional)
 
 - Automate the script execution with a cron job on the server.
 - Show feed consumption statistics in Looker Studio.
 - Automatically distribute updates to platforms (LinkedIn, Email, etc).
+
+---
+
+## 🧾 Licença
+
+Este projeto está licenciado sob a licença MIT. Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes.
+
+---
+
+## 🤝 Contribuindo
+
+Contribuições são bem-vindas! Veja o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md) para instruções.
+
+---
+
+## 🧭 Código de Conduta
+
+Este projeto segue o [Código de Conduta](./CODE_OF_CONDUCT.md) para garantir um ambiente colaborativo saudável.
+
+---
+
+## 🔐 Segurança
+
+Se você encontrar alguma vulnerabilidade, consulte o arquivo [SECURITY.md](./SECURITY.md) para saber como reportar de forma segura.
+
+---
+
+## 🌍 English Info
+
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.  
+To contribute, read the [CONTRIBUTING.md](./CONTRIBUTING.md) guide.  
+Please follow our [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) for respectful collaboration.  
+For security concerns, check [SECURITY.md](./SECURITY.md).

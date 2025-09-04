@@ -6,4 +6,15 @@ Esperamos que todos os participantes respeitem um ambiente aberto, seguro e incl
 
 ## Contato
 
-Se você observar qualquer violação deste código, envie um e-mail para: <rafael@adrock.com.br>
+
+---
+
+# Code of Conduct
+
+This project adopts the [Contributor Covenant](https://www.contributor-covenant.org/) as its code of conduct.
+
+We expect all participants to respect an open, safe, and inclusive environment for everyone.
+
+## Contact
+
+If you observe any violation of this code, please send an email to: <rafael@adrock.com.br>
