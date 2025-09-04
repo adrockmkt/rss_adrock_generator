@@ -8,8 +8,17 @@ def generate_rss(posts):
     Gera o feed RSS com base na lista de posts extraída do blog da Ad Rock.
     Cada item inclui título, link, data de publicação e descrição extraída do meta description da página.
     """
-    rss = Element("rss", version="2.0", attrib={"xmlns:media": "http://search.yahoo.com/mrss/"})
+    rss = Element("rss", version="2.0", attrib={
+        "xmlns:media": "http://search.yahoo.com/mrss/",
+        "xmlns:atom": "http://www.w3.org/2005/Atom"
+    })
     channel = SubElement(rss, "channel")
+
+    SubElement(channel, "atom:link", {
+        "href": "https://mobiledelivery.com.br/rss/adrock.xml",
+        "rel": "self",
+        "type": "application/rss+xml"
+    })
 
     SubElement(channel, "title").text = "Ad Rock Blog"
     SubElement(channel, "link").text = "https://adrock.com.br/blog"

@@ -8,7 +8,8 @@ if __name__ == "__main__":
         if not posts:
             raise ValueError("Nenhum post foi encontrado no blog.")
         generate_rss(posts)
-        rss_path = os.path.abspath("output/adrock.xml")
-        print(f"✅ RSS gerado com sucesso: {rss_path}")
+        os.system("cp output/adrock.xml /var/www/mobiledelivery.com.br/rss/adrock.xml")
+        rss_path = "/var/www/mobiledelivery.com.br/rss/adrock.xml"
+        print(f"✅ RSS gerado com sucesso e disponível em: https://mobiledelivery.com.br/rss/adrock.xml")
     except Exception as e:
         print(f"❌ Erro ao gerar RSS: {e}")
