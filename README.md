@@ -21,15 +21,15 @@ Este projeto gera um feed RSS no formato XML a partir dos posts públicos do blo
    python main.py
    ```
 
-3. O arquivo RSS será gerado em:
+3. O arquivo RSS será gerado automaticamente em:
 
    ```
-   output/adrock.xml
+   /var/www/mobiledelivery.com.br/rss/adrock.xml
    ```
 
 ## 🚀 Publicação
 
-Após a geração, copie o arquivo `adrock.xml` para o servidor em:
+O RSS é publicado automaticamente em:
 
 ```
 https://mobiledelivery.com.br/rss/adrock.xml
@@ -74,15 +74,15 @@ This project generates an RSS feed in XML format from public posts of the Ad Roc
    python main.py
    ```
 
-3. The RSS file will be generated at:
+3. The RSS file will be automatically generated at:
 
    ```
-   output/adrock.xml
+   /var/www/mobiledelivery.com.br/rss/adrock.xml
    ```
 
 ## 🚀 Deployment
 
-After generation, copy the `adrock.xml` file to the server at:
+The RSS feed is automatically published to:
 
 ```
 https://mobiledelivery.com.br/rss/adrock.xml
