@@ -43,7 +43,6 @@ Valide o feed gerado utilizando:
 
 ## 💡 Futuro (opcional)
 
-- Automatizar a execução do script com um cron job no servidor.
 - Exibir estatísticas de consumo do feed no painel Looker Studio.
 - Enviar atualizações automaticamente para plataformas de distribuição (LinkedIn, Email, etc).
 
@@ -97,7 +96,6 @@ Validate the generated feed using:
 
 ## 💡 Future (optional)
 
-- Automate the script execution with a cron job on the server.
 - Show feed consumption statistics in Looker Studio.
 - Automatically distribute updates to platforms (LinkedIn, Email, etc).
 
