@@ -2,6 +2,7 @@ from datetime import datetime
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 import os
+from email.utils import format_datetime
 
 def generate_rss(posts):
     """
@@ -30,7 +31,8 @@ def generate_rss(posts):
         SubElement(item, "title").text = post["title"]
         SubElement(item, "link").text = post["url"]
         SubElement(item, "guid").text = post["url"]
-        SubElement(item, "pubDate").text = datetime.fromisoformat(post["date"]).strftime("%a, %d %b %Y %H:%M:%S +0000")
+        pub_date_obj = datetime.fromisoformat(post["date"])
+        SubElement(item, "pubDate").text = format_datetime(pub_date_obj)
         description = post.get("description")
         SubElement(item, "description").text = description if description and description.strip() else "Sem descrição"
         SubElement(item, "media:content", url=post["image"], medium="image")

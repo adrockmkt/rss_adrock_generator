@@ -37,9 +37,14 @@ def get_blog_posts():
             or post_soup.find("div")
         )
 
+        from datetime import datetime
+
         title = title_tag.text.strip() if title_tag else "Sem título"
         pub_date_raw = date_tag.get("datetime") if date_tag else ""
-        pub_date = pub_date_raw.strip() if isinstance(pub_date_raw, str) and pub_date_raw.strip() else "2000-01-01T00:00:00"
+        if isinstance(pub_date_raw, str) and pub_date_raw.strip():
+            pub_date = pub_date_raw.strip()
+        else:
+            pub_date = datetime.utcnow().isoformat()
         content = content_tag.decode_contents() if content_tag else ""
 
         short_desc_tag = post_soup.select_one('[data-framer-name="Short description"] p')
