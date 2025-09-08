@@ -41,10 +41,9 @@ Valide o feed gerado utilizando:
 
 👉 https://validator.w3.org/feed/
 
-## 💡 Futuro (opcional)
+## 💡 Futuro
 
 - Exibir estatísticas de consumo do feed no painel Looker Studio.
-- Enviar atualizações automaticamente para plataformas de distribuição (LinkedIn, Email, etc).
 
 ---
 
@@ -93,11 +92,9 @@ Validate the generated feed using:
 
 👉 https://validator.w3.org/feed/
 
-
-## 💡 Future (optional)
+## 💡 Future
 
 - Show feed consumption statistics in Looker Studio.
-- Automatically distribute updates to platforms (LinkedIn, Email, etc).
 
 ---
 

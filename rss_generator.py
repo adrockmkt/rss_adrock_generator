@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 import os
@@ -30,12 +30,12 @@ def generate_rss(posts):
         item = SubElement(channel, "item")
         SubElement(item, "title").text = post["title"]
         SubElement(item, "link").text = post["url"]
-        SubElement(item, "guid").text = post["url"]
-        pub_date_obj = datetime.fromisoformat(post["date"])
+        pub_date_obj = datetime.strptime(post["date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
         SubElement(item, "pubDate").text = format_datetime(pub_date_obj)
         description = post.get("description")
         SubElement(item, "description").text = description if description and description.strip() else "Sem descrição"
-        SubElement(item, "media:content", url=post["image"], medium="image")
+        clean_image = post["image"].split("?")[0]
+        SubElement(item, "media:content", url=clean_image, medium="image")
 
     xml_str = minidom.parseString(tostring(rss)).toprettyxml(indent="  ")
     os.makedirs("output", exist_ok=True)

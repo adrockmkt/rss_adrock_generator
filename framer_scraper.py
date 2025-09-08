@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from datetime import datetime, timezone
 
 BASE_URL = "https://adrock.com.br"
 
@@ -37,25 +38,35 @@ def get_blog_posts():
             or post_soup.find("div")
         )
 
-        from datetime import datetime
+        from email.utils import format_datetime
+        from dateutil import parser as date_parser
 
         title = title_tag.text.strip() if title_tag else "Sem título"
         pub_date_raw = date_tag.get("datetime") if date_tag else ""
         if isinstance(pub_date_raw, str) and pub_date_raw.strip():
-            pub_date = pub_date_raw.strip()
+            try:
+                parsed_date = date_parser.parse(pub_date_raw.strip())
+                pub_date = parsed_date.strftime("%Y-%m-%d")
+            except Exception as e:
+                print(f"Erro ao analisar data: {e}")
+                pub_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         else:
-            pub_date = datetime.utcnow().isoformat()
+            pub_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         content = content_tag.decode_contents() if content_tag else ""
 
         short_desc_tag = post_soup.select_one('[data-framer-name="Short description"] p')
         description = short_desc_tag.get_text(strip=True) if short_desc_tag else "Sem descrição"
 
-        # tenta pegar a imagem principal
-        img_tag = post_soup.select_one("img[src*='/blog/imagens/']")
-        if img_tag and img_tag.get("src"):
-            image_url = urljoin(BASE_URL, img_tag["src"])
+        og_image_tag = post_soup.find("meta", property="og:image")
+        if og_image_tag and og_image_tag.get("content"):
+            image_url = og_image_tag["content"]
         else:
-            image_url = f"{BASE_URL}/blog/imagens/{url.split('/')[-1]}.jpg"
+            # fallback: primeira imagem do conteúdo do artigo
+            img_tag = post_soup.select_one("article img")
+            if img_tag and img_tag.get("src"):
+                image_url = img_tag["src"]
+            else:
+                image_url = ""
 
         posts.append({
             "title": title,
