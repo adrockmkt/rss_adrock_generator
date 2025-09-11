@@ -2,10 +2,13 @@
 
 Este projeto gera um feed RSS no formato XML a partir dos posts públicos do blog da Ad Rock, desenvolvido em Framer. Cada item inclui título, link, data de publicação, descrição e imagem. Ideal para distribuir atualizações automaticamente em plataformas que consomem RSS.
 
+Agora, o projeto também redimensiona e publica as imagens do feed RSS. As imagens redimensionadas são salvas na pasta `images/` do projeto e servidas publicamente via Nginx em `/rss_images/`. No feed, o elemento `<media:content>` mantém a URL original da imagem, enquanto o `<enclosure>` aponta para a versão redimensionada, garantindo melhor desempenho e compatibilidade.
+
 ## 📦 Pré-requisitos
 
 - Python 3.10 ou superior
 - Dependências listadas no arquivo `requirements.txt`
+- Pillow (biblioteca para manipulação de imagens)
 
 ## ⚙️ Como usar
 
@@ -26,6 +29,8 @@ Este projeto gera um feed RSS no formato XML a partir dos posts públicos do blo
    ```
    /var/www/mobiledelivery.com.br/rss/adrock.xml
    ```
+
+   Além disso, as imagens redimensionadas serão salvas na pasta `images/` do projeto e disponibilizadas publicamente via Nginx em `/rss_images/`.
 
 ## 🚀 Publicação
 
@@ -53,10 +58,13 @@ Valide o feed gerado utilizando:
 
 This project generates an RSS feed in XML format from public posts of the Ad Rock blog, built with Framer. Each item includes title, link, publish date, description, and image. Ideal for automatically distributing updates on platforms that consume RSS.
 
+The project now also resizes and publishes images in the RSS feed. Resized images are saved in the project's `images/` folder and served publicly via Nginx at `/rss_images/`. In the feed, the `<media:content>` element retains the original image URL, while the `<enclosure>` points to the resized version, ensuring better performance and compatibility.
+
 ## 📦 Requirements
 
 - Python 3.10 or higher
 - Dependencies listed in `requirements.txt`
+- Pillow (image processing library)
 
 ## ⚙️ How to Use
 
@@ -77,6 +85,8 @@ This project generates an RSS feed in XML format from public posts of the Ad Roc
    ```
    /var/www/mobiledelivery.com.br/rss/adrock.xml
    ```
+
+   Additionally, resized images will be saved in the project's `images/` folder and made publicly available via Nginx at `/rss_images/`.
 
 ## 🚀 Deployment
 
