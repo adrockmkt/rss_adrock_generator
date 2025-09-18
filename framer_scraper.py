@@ -13,7 +13,7 @@ def get_blog_posts():
     seen = set()
     post_links = []
 
-    for a_tag in soup.select("a.framer-bGNrD[href*='/blog/']"):
+    for a_tag in soup.select("a[href*='/blog/']"):
         href = a_tag["href"]
         title_element = a_tag.select_one(".framer-jha8re p")
         if title_element and href != "/blog" and href not in seen:
