@@ -18,7 +18,12 @@ if __name__ == "__main__":
                 send_urls(urls)
         except Exception as indexnow_error:
             print(f"⚠️ Erro ao enviar para IndexNow: {indexnow_error}")
-        os.system("cp output/adrock.xml /var/www/mobiledelivery.com.br/rss/adrock.xml")
+        rss_output_path = "/var/www/mobiledelivery.com.br/rss/"
+        if os.path.exists(rss_output_path):
+            os.system("cp output/adrock.xml /var/www/mobiledelivery.com.br/rss/adrock.xml")
+            print("📦 RSS copiado para o diretório do servidor.")
+        else:
+            print("ℹ️ Ambiente local detectado. Cópia para /var/www ignorada.")
         rss_path = "/var/www/mobiledelivery.com.br/rss/adrock.xml"
         print(f"✅ RSS gerado com sucesso e disponível em: https://mobiledelivery.com.br/rss/adrock.xml")
     except Exception as e:
