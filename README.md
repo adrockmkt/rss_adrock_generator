@@ -6,6 +6,8 @@ O projeto também integra o protocolo **IndexNow**, notificando automaticamente 
 
 Agora, o projeto também redimensiona e publica as imagens do feed RSS. As imagens redimensionadas são salvas na pasta `images/` do projeto e servidas publicamente via Nginx em `/rss_images/`. No feed, o elemento `<media:content>` mantém a URL original da imagem, enquanto o `<enclosure>` aponta para a versão redimensionada, garantindo melhor desempenho e compatibilidade.
 
+O envio para o IndexNow utiliza apenas os parâmetros `host`, `key` e `urlList`, conforme especificação oficial do protocolo. A chave é validada via arquivo público hospedado em `https://adrock.com.br/adrock-indexnow-2026.txt`, servido por Cloudflare Worker. O endpoint pode retornar status 200 (processado imediatamente) ou 202 (aceito para processamento assíncrono), ambos considerados sucesso.
+
 ## 📦 Pré-requisitos
 
 - Python 3.10 ou superior
@@ -33,6 +35,7 @@ Agora, o projeto também redimensiona e publica as imagens do feed RSS. As image
    - Redimensionar e salvar imagens em `images/`
    - (Em produção) Copiar o RSS para `/var/www/mobiledelivery.com.br/rss/adrock.xml`
    - Enviar automaticamente as URLs novas para o IndexNow
+   - Registrar logs de envio e evitar reenvios duplicados via SQLite (`indexnow/logs.db`)
 
 > ⚠️ Observação: Em ambiente local, o caminho `/var/www/...` pode não existir. A cópia final do RSS é relevante apenas no servidor de produção.
 
@@ -52,7 +55,7 @@ O projeto utiliza o endpoint oficial:
 https://api.indexnow.org/indexnow
 ```
 
-A chave de verificação é publicada em:
+A chave de verificação é publicada diretamente no domínio principal (requisito do protocolo):
 
 ```
 https://indexnow.adrock.com.br/adrock-indexnow-2026.txt
@@ -89,6 +92,8 @@ The project also integrates **IndexNow**, automatically notifying compatible sea
 
 The project now also resizes and publishes images in the RSS feed. Resized images are saved in the project's `images/` folder and served publicly via Nginx at `/rss_images/`. In the feed, the `<media:content>` element retains the original image URL, while the `<enclosure>` points to the resized version, ensuring better performance and compatibility.
 
+IndexNow submission uses only the `host`, `key`, and `urlList` parameters, following the official protocol specification. The verification key is validated through a public file hosted at `https://adrock.com.br/adrock-indexnow-2026.txt`, served via Cloudflare Worker. The endpoint may return status 200 (processed immediately) or 202 (accepted for asynchronous processing), both considered successful.
+
 ## 📦 Requirements
 
 - Python 3.10 or higher
@@ -116,6 +121,7 @@ The project now also resizes and publishes images in the RSS feed. Resized image
    - Resize and store images in `images/`
    - (In production) Copy the RSS to `/var/www/mobiledelivery.com.br/rss/adrock.xml`
    - Automatically notify IndexNow about new URLs
+   - Log submission attempts and prevent duplicate resubmissions via SQLite (`indexnow/logs.db`)
 
 > ⚠️ Note: The `/var/www/...` path is only relevant in the production server environment.
 
@@ -135,7 +141,7 @@ The project uses the official endpoint:
 https://api.indexnow.org/indexnow
 ```
 
-The verification key is published at:
+The verification key is published directly under the main domain (protocol requirement):
 
 ```
 https://indexnow.adrock.com.br/adrock-indexnow-2026.txt
