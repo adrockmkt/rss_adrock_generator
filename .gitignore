@@ -7,6 +7,14 @@ __pycache__/
 venv/
 output/
 
+# Generated images (RSS)
+images/
+
+# IndexNow
+indexnow/logs.db
+indexnow/key.txt
+*.db
+
 # IDEs
 .vscode/
 .idea/

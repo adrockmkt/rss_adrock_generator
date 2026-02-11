@@ -2,6 +2,8 @@
 
 Este projeto gera um feed RSS no formato XML a partir dos posts públicos do blog da Ad Rock, desenvolvido em Framer. Cada item inclui título, link, data de publicação, descrição e imagem. Ideal para distribuir atualizações automaticamente em plataformas que consomem RSS.
 
+O projeto também integra o protocolo **IndexNow**, notificando automaticamente mecanismos compatíveis (como Bing) sempre que novos posts são publicados. O envio ocorre logo após a geração do RSS, com controle de duplicidade via SQLite para evitar reenvios desnecessários.
+
 Agora, o projeto também redimensiona e publica as imagens do feed RSS. As imagens redimensionadas são salvas na pasta `images/` do projeto e servidas publicamente via Nginx em `/rss_images/`. No feed, o elemento `<media:content>` mantém a URL original da imagem, enquanto o `<enclosure>` aponta para a versão redimensionada, garantindo melhor desempenho e compatibilidade.
 
 ## 📦 Pré-requisitos
@@ -24,13 +26,15 @@ Agora, o projeto também redimensiona e publica as imagens do feed RSS. As image
    python main.py
    ```
 
-3. O arquivo RSS será gerado automaticamente em:
+3. O script irá:
 
-   ```
-   /var/www/mobiledelivery.com.br/rss/adrock.xml
-   ```
+   - Fazer scraping dos posts do blog
+   - Gerar o arquivo `output/adrock.xml`
+   - Redimensionar e salvar imagens em `images/`
+   - (Em produção) Copiar o RSS para `/var/www/mobiledelivery.com.br/rss/adrock.xml`
+   - Enviar automaticamente as URLs novas para o IndexNow
 
-   Além disso, as imagens redimensionadas serão salvas na pasta `images/` do projeto e disponibilizadas publicamente via Nginx em `/rss_images/`.
+> ⚠️ Observação: Em ambiente local, o caminho `/var/www/...` pode não existir. A cópia final do RSS é relevante apenas no servidor de produção.
 
 ## 🚀 Publicação
 
@@ -39,6 +43,29 @@ O RSS é publicado automaticamente em:
 ```
 https://mobiledelivery.com.br/rss/adrock.xml
 ```
+
+## 🔔 Integração com IndexNow
+
+O projeto utiliza o endpoint oficial:
+
+```
+https://api.indexnow.org/indexnow
+```
+
+A chave de verificação é publicada em:
+
+```
+https://indexnow.adrock.com.br/adrock-indexnow-2026.txt
+```
+
+O envio é feito automaticamente após a geração do RSS, com registro em `indexnow/logs.db` para controle de duplicidade e auditoria de status HTTP.
+
+Arquivos locais não versionados:
+
+- `images/`
+- `output/`
+- `indexnow/logs.db`
+- `indexnow/key.txt`
 
 ## ✅ Validação
 
@@ -57,6 +84,8 @@ Valide o feed gerado utilizando:
 # RSS Feed Generator for Framer Blog (Ad Rock)
 
 This project generates an RSS feed in XML format from public posts of the Ad Rock blog, built with Framer. Each item includes title, link, publish date, description, and image. Ideal for automatically distributing updates on platforms that consume RSS.
+
+The project also integrates **IndexNow**, automatically notifying compatible search engines whenever new posts are published. A local SQLite database prevents duplicate submissions.
 
 The project now also resizes and publishes images in the RSS feed. Resized images are saved in the project's `images/` folder and served publicly via Nginx at `/rss_images/`. In the feed, the `<media:content>` element retains the original image URL, while the `<enclosure>` points to the resized version, ensuring better performance and compatibility.
 
@@ -80,13 +109,15 @@ The project now also resizes and publishes images in the RSS feed. Resized image
    python main.py
    ```
 
-3. The RSS file will be automatically generated at:
+3. The script will:
 
-   ```
-   /var/www/mobiledelivery.com.br/rss/adrock.xml
-   ```
+   - Scrape blog posts
+   - Generate `output/adrock.xml`
+   - Resize and store images in `images/`
+   - (In production) Copy the RSS to `/var/www/mobiledelivery.com.br/rss/adrock.xml`
+   - Automatically notify IndexNow about new URLs
 
-   Additionally, resized images will be saved in the project's `images/` folder and made publicly available via Nginx at `/rss_images/`.
+> ⚠️ Note: The `/var/www/...` path is only relevant in the production server environment.
 
 ## 🚀 Deployment
 
@@ -95,6 +126,29 @@ The RSS feed is automatically published to:
 ```
 https://mobiledelivery.com.br/rss/adrock.xml
 ```
+
+## 🔔 IndexNow Integration
+
+The project uses the official endpoint:
+
+```
+https://api.indexnow.org/indexnow
+```
+
+The verification key is published at:
+
+```
+https://indexnow.adrock.com.br/adrock-indexnow-2026.txt
+```
+
+URLs are automatically submitted after RSS generation, with logging stored in `indexnow/logs.db` to prevent duplicate submissions and to keep HTTP status records.
+
+Non-versioned local files:
+
+- `images/`
+- `output/`
+- `indexnow/logs.db`
+- `indexnow/key.txt`
 
 ## ✅ Validation
 
