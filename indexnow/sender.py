@@ -5,7 +5,6 @@ from datetime import datetime
 INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"
 
 INDEXNOW_KEY = "adrock-indexnow-2026"
-KEY_LOCATION = "https://indexnow.adrock.com.br/adrock-indexnow-2026.txt"
 HOST = "adrock.com.br"
 
 DB_PATH = "indexnow/logs.db"
@@ -55,7 +54,6 @@ def send_urls(urls):
     payload = {
         "host": HOST,
         "key": INDEXNOW_KEY,
-        "keyLocation": KEY_LOCATION,
         "urlList": urls_to_send
     }
 
