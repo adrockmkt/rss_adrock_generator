@@ -32,34 +32,58 @@ def generate_rss(posts):
     os.makedirs("images", exist_ok=True)
 
     for post in posts[:20]:  # Limita a 20 itens no feed
+        # Ignora posts sem título válido
+        title = post.get("title", "").strip()
+        if not title:
+            continue
+
         item = SubElement(channel, "item")
-        SubElement(item, "title").text = post["title"]
+        SubElement(item, "title").text = title
         SubElement(item, "link").text = post["url"]
-        pub_date_obj = datetime.strptime(post["date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+
+        # Data
+        try:
+            pub_date_obj = datetime.strptime(post["date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        except Exception:
+            pub_date_obj = datetime.now(timezone.utc)
         SubElement(item, "pubDate").text = format_datetime(pub_date_obj)
-        description = post.get("description")
-        SubElement(item, "description").text = description if description and description.strip() else "Sem descrição"
-        clean_image = post["image"].split("?")[0]
-        SubElement(item, "media:content", url=clean_image, medium="image")
 
-        # baixar e redimensionar a imagem
-        resp = requests.get(clean_image)
-        if resp.status_code == 200:
-            img = Image.open(BytesIO(resp.content))
-            max_width = 600
-            w_percent = max_width / float(img.size[0])
-            h_size = int(float(img.size[1]) * float(w_percent))
-            img = img.resize((max_width, h_size))
-            local_filename = os.path.basename(clean_image)
-            local_path = os.path.join("images", local_filename)
-            img.save(local_path, format="PNG", optimize=True)
-            enclosure_url = f"https://mobiledelivery.com.br/rss_images/{local_filename}"
-            mime = "image/png"
+        # Descrição (não força "Sem descrição")
+        description = post.get("description", "").strip()
+        if description:
+            SubElement(item, "description").text = description
         else:
-            enclosure_url = clean_image
-            mime = "image/png"
+            SubElement(item, "description").text = ""
 
-        SubElement(item, "enclosure", url=enclosure_url, type=mime)
+        # Imagem (só inclui se existir)
+        image_url = post.get("image", "").strip()
+        if image_url:
+            clean_image = image_url.split("?")[0]
+            SubElement(item, "media:content", url=clean_image, medium="image")
+
+            try:
+                resp = requests.get(clean_image, timeout=20)
+                if resp.status_code == 200:
+                    img = Image.open(BytesIO(resp.content))
+                    max_width = 600
+                    w_percent = max_width / float(img.size[0])
+                    h_size = int(float(img.size[1]) * float(w_percent))
+                    img = img.resize((max_width, h_size))
+
+                    local_filename = os.path.basename(clean_image)
+                    local_path = os.path.join("images", local_filename)
+                    img.save(local_path, format="PNG", optimize=True)
+
+                    enclosure_url = f"https://mobiledelivery.com.br/rss_images/{local_filename}"
+                    mime = "image/png"
+                else:
+                    enclosure_url = clean_image
+                    mime = "image/png"
+
+                SubElement(item, "enclosure", url=enclosure_url, type=mime)
+
+            except Exception:
+                pass
 
     xml_str = minidom.parseString(tostring(rss)).toprettyxml(indent="  ")
     os.makedirs("output", exist_ok=True)
