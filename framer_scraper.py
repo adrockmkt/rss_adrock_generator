@@ -41,7 +41,8 @@ def get_blog_posts():
         from email.utils import format_datetime
         from dateutil import parser as date_parser
 
-        title = title_tag.text.strip() if title_tag else "Sem título"
+        title = title_tag.text.strip() if title_tag else ""
+
         pub_date_raw = date_tag.get("datetime") if date_tag else ""
         if isinstance(pub_date_raw, str) and pub_date_raw.strip():
             try:
@@ -55,18 +56,21 @@ def get_blog_posts():
         content = content_tag.decode_contents() if content_tag else ""
 
         short_desc_tag = post_soup.select_one('[data-framer-name="Short description"] p')
-        description = short_desc_tag.get_text(strip=True) if short_desc_tag else "Sem descrição"
+        if short_desc_tag and short_desc_tag.get_text(strip=True):
+            description = short_desc_tag.get_text(strip=True)
+        else:
+            # fallback: meta description
+            meta_desc = post_soup.find("meta", attrs={"name": "description"})
+            if meta_desc and meta_desc.get("content"):
+                description = meta_desc["content"].strip()
+            else:
+                description = ""
 
         og_image_tag = post_soup.find("meta", property="og:image")
         if og_image_tag and og_image_tag.get("content"):
-            image_url = og_image_tag["content"]
+            image_url = og_image_tag["content"].strip()
         else:
-            # fallback: primeira imagem do conteúdo do artigo
-            img_tag = post_soup.select_one("article img")
-            if img_tag and img_tag.get("src"):
-                image_url = img_tag["src"]
-            else:
-                image_url = ""
+            image_url = ""
 
         posts.append({
             "title": title,
