@@ -6,9 +6,9 @@ from datetime import datetime, timezone
 BASE_URL = "https://adrock.com.br"
 
 def get_blog_posts():
-    response = requests.get(f"{BASE_URL}/blog")
+    response = requests.get(f"{BASE_URL}/blog", timeout=10, headers={"User-Agent": "Mozilla/5.0"})
     response.encoding = 'utf-8'  # força utf-8
-    soup = BeautifulSoup(response.text, "html.parser")
+    soup = BeautifulSoup(response.text, "lxml")
 
     seen = set()
     post_links = []
@@ -25,11 +25,41 @@ def get_blog_posts():
     posts = []
 
     for url in post_links:
-        post_resp = requests.get(url)
+        post_resp = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
         post_resp.encoding = 'utf-8'  # força utf-8
-        post_soup = BeautifulSoup(post_resp.text, "html.parser")
+        post_soup = BeautifulSoup(post_resp.text, "lxml")
 
-        title_tag = post_soup.find("h1")
+        def extract_title(soup):
+            og = soup.find("meta", property="og:title")
+            if og and og.get("content"):
+                return og["content"].strip()
+
+            tw = soup.find("meta", attrs={"name": "twitter:title"})
+            if tw and tw.get("content"):
+                return tw["content"].strip()
+
+            if soup.title and soup.title.string:
+                return soup.title.string.strip()
+
+            h1 = soup.find("h1")
+            if h1 and h1.text:
+                return h1.text.strip()
+
+            return None
+
+
+        def extract_image(soup):
+            og = soup.find("meta", property="og:image")
+            if og and og.get("content") and "framerusercontent" in og["content"]:
+                return og["content"].strip()
+
+            return None
+
+        title = extract_title(post_soup)
+        if not title:
+            print(f"⚠️ Post ignorado (sem título): {url}")
+            continue
+
         date_tag = post_soup.find("time")
         content_tag = (
             post_soup.find("article")
@@ -40,8 +70,6 @@ def get_blog_posts():
 
         from email.utils import format_datetime
         from dateutil import parser as date_parser
-
-        title = title_tag.text.strip() if title_tag else ""
 
         pub_date_raw = date_tag.get("datetime") if date_tag else ""
         if isinstance(pub_date_raw, str) and pub_date_raw.strip():
@@ -66,11 +94,10 @@ def get_blog_posts():
             else:
                 description = ""
 
-        og_image_tag = post_soup.find("meta", property="og:image")
-        if og_image_tag and og_image_tag.get("content"):
-            image_url = og_image_tag["content"].strip()
-        else:
-            image_url = ""
+        image_url = extract_image(post_soup)
+        if not image_url:
+            print(f"⚠️ Post ignorado (sem imagem válida): {url}")
+            continue
 
         posts.append({
             "title": title,
