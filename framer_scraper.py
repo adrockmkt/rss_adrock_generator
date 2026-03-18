@@ -56,9 +56,22 @@ def get_blog_posts():
             return None
 
         title = extract_title(post_soup)
-        if not title:
-            print(f"⚠️ Post ignorado (sem título): {url}")
+
+        # Validação robusta de título (evita posts quebrados do Framer)
+        if (
+            not title
+            or len(title.strip()) < 10
+            or title.strip().lower() in ["ad rock blog", "blog", ""]
+        ):
+            print(f"⚠️ Post ignorado (título inválido): {url}")
             continue
+
+        # Normaliza o título para evitar espaços estranhos
+        title = " ".join(title.split())
+        # Remove prefixo padrão do Framer (quando vem do <title>)
+        title = title.replace("Ad Rock Digital Mkt - Blog - ", "")
+        title = title.replace("Ad Rock Digital Mkt - Blog", "")
+        title = title.strip()
 
         date_tag = post_soup.find("time")
         content_tag = (
